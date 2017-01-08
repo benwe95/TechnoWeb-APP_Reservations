@@ -1,4 +1,5 @@
 <?php
+
 class People
 {
   private $name;
