@@ -9,7 +9,7 @@ require(WEBROOT.'models/databaseModel.php');
 
 $GLOBALS['database'] = new Database();
 
-$controller = isset($_GET['page']) ? $_GET['page'] : 'home';
+$controller = isset($_GET['page']) ? $_GET['page'] : 'main';
 $action = isset($_GET['action']) ? $_GET['action'] : 'home';
 $id = isset($_GET['id']) ? $_GET['id'] : '-1';
 
