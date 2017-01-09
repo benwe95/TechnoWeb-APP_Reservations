@@ -7,7 +7,7 @@ class Controller{
 
     //Includes the required view $viewname
     public function render($viewname){
-      //the variable must exist in the same some of the 'include' to be used in the viewfile
+      //The variable must exist in the same scope as the 'require' to be used in the html code
       extract($this->vars);
 
       ob_start();
@@ -16,7 +16,7 @@ class Controller{
       require(WEBROOT.'views/templates/'.$this->template.'.php');
     }
 
-    //To psuh datas into the view
+    //To push datas into the view
     public function set($newvars){
       //Add de datas $newvars in the existing datas $vars
       $this->vars = array_merge($this->vars, $newvars);

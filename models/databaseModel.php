@@ -18,7 +18,7 @@ class Database{
   }
 
   private function getPDO(){
-    //pour ne faire q'une seule fois la connexion à la base de données
+  
     $pdo;
     if($this->pdo === null){
       try{
@@ -26,6 +26,7 @@ class Database{
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
       }
       catch(PDOException $e){
+		  //If the database doesn't exist ("unknow db name") then creates it with the 'reservations' table
         if ($e->getCode() == 1049){
           $pdo = $this->createDatabase($this->db_name);
         }
@@ -40,7 +41,7 @@ class Database{
   }
 
 
-  //Create a new database for the appliclation if it doesn't exist and create the 'reservations' table
+  //Creates a new database for the application and create the 'reservations' table
   public function createDatabase($db_name){
 
     $pdo = new PDO ('mysql:host='.$this->db_host.';charset=utf8', 'root', $this->db_pass);
@@ -58,19 +59,17 @@ class Database{
     return $pdo;
   }
 
-  //Si auncune requête n'est effectuée alors l'objet pdo ne sera jamais initialisé
+  //Return an array containing the result of the request
   public function query($statement){
-    //On effectue une requête qui récupère TOUT le contenu de la table data_global de la base de donnée sotckée dans $bdd
-    // (ce contenu est inexploitable en tant que tel)
+
     $req = $this->getPDO()->query($statement);
-    //On récupère le contenu des entrées de $data sous forme d'un tableau de tableaux (dont le contenu est maintenant exploitable)
     $datas = $req->fetchAll(PDO::FETCH_CLASS);
     return $datas;
   }
 
 
   public function newEntry($array_statement){
-    //$this->getPDO()->exec('INSERT INTO'.$table.'SET'.$statement);
+ 
     try{
         $sql = 'INSERT INTO reservations(destination, insurance, names, ages, total)
           VALUES(:destination, :insurance, :names, :ages, :total)';

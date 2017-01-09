@@ -8,6 +8,8 @@ class Reservation extends Controller{
     require_once(WEBROOT.'models/reservationModel.php');
     require_once(WEBROOT.'models/peopleModel.php');
 
+	//If there is no object of type 'reservationModel' in the current session then creates one. 
+	//Otherwise unserializes it to use its content.
     if (!isset($_SESSION['reservation'])){
       $reservation = new ReservationModel();
       $_SESSION['reservation'] = serialize($reservation);
@@ -16,9 +18,9 @@ class Reservation extends Controller{
       $reservation = unserialize($_SESSION['reservation']);
     }
 
-    //$array_people = (isset($_SESSION['people'])) ? unserialize($_SESSION['people']) : array();
     $array_people = $reservation->getPeople();
 
+	//$this->datas contains all the datas that are necessary for the views
     $this->datas = array(
       'reservation' => $reservation,
       'error' => false,
@@ -33,7 +35,7 @@ class Reservation extends Controller{
     $this->render('home');
   }
 
-
+//Main method of the reservation. It analyses which button was pressed in the form and then reacts to it.
   public function handle(){
     #-------- PAGE RESERVATION --------
     if(isset($_POST['send_reservation'])){
@@ -86,7 +88,7 @@ class Reservation extends Controller{
 
   }
 
-
+//Updates the object 'reservationModel' 
   public function handleReservation(){
     $this->datas['reservation']->setDestination ( htmlspecialchars($_POST['destination']) );
     $this->datas['reservation']->setNbPlaces ( htmlspecialchars($_POST['nb_places']) );
@@ -131,7 +133,7 @@ class Reservation extends Controller{
         }
   }
 
-
+//Saves the reservation in the database if the user confirmed it.
   public function handleValidation(){
 
     $this->datas['insurance'] = ($this->datas['reservation']->getInsurance()) ? 'yes' : 'no' ;
@@ -154,7 +156,7 @@ class Reservation extends Controller{
     $GLOBALS['database']->newEntry($array_statement);
   }
 
-
+//Reloads the page where an entry was wrong. A message will be displayed for the user
   public function handleError($viewname){
     $this->datas['error'] = true;
     $this->loadView($this->datas, $viewname);

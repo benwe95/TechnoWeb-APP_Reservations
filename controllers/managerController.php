@@ -20,6 +20,7 @@ class Manager extends Controller{
 
   public function edit($id){
 
+  //Loads the datas of the specific reservation $id and handles them so they can be used in the view
     $infos = $this->datas['database']->query('SELECT * FROM reservations WHERE id='.$id);
     $_SESSION['id'] = $infos[0]->id;
     $infos['destination'] = $infos[0]->destination;
@@ -46,6 +47,7 @@ class Manager extends Controller{
       }
       if($insu =='yes') $total += 20;
 
+	  //Sets the paramaters for the request that will update the database
       $array_statement = array(
         'destination' => $_POST['destination'],
         'insurance' => $insu,
@@ -61,7 +63,7 @@ class Manager extends Controller{
     $this->loadView($this->datas, 'home');
   }
 
-
+//if the admin pressed 'delete' for a reservation he can still cancel his decision
   public function delete($id){
     $this->datas['del_id'] = $id;
     if(isset($_POST['save_delete'])){
